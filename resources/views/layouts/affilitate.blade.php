@@ -13,8 +13,24 @@
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+    <!-- Awin Tracking Script -->
+    <img src="https://www.awin1.com/sread.img?tt=ns&tv=2&merchant=79928&amount={{ $order_subtotal }}&cr={{ $currency_code }}&ref={{ $order_ref }}&parts={{ $commission_group }}:{{ $sale_amount }}&vc={{ $voucher_code }}&ch=aw&customeracquisition={{ $customer_acquisition }}" border="0" width="0" height="0">
 
     <!-- Scripts -->
+    
+    <script type="text/javascript">
+        //var AWIN = {};
+        AWIN.Tracking = {};
+        AWIN.Tracking.Sale = {};
+        /*** Set your transaction parameters ***/
+        AWIN.Tracking.Sale.amount = "{{ $order_subtotal }}";
+        AWIN.Tracking.Sale.orderRef = "{{ $order_ref }}";
+        AWIN.Tracking.Sale.parts = "{{ $commission_group }}:{{ $sale_amount }}";
+        AWIN.Tracking.Sale.voucher = "{{ $voucher_code }}";
+        AWIN.Tracking.Sale.currency = "{{ $currency_code }}";
+        AWIN.Tracking.Sale.channel = "aw";
+        AWIN.Tracking.Sale.customerAcquisition = "{{ $customer_acquisition }}";
+    </script>
     <script async src="https://js.stripe.com/v3/"></script>
     <script src="https://www.dwin1.com/79928.js" type="text/javascript" defer="defer"></script>
     <!-- Google Tag Manager -->
