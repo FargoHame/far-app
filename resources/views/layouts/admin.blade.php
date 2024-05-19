@@ -12,7 +12,8 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-
+  <!-- Scripts -->
+  <script src="https://www.dwin1.com/79928.js" type="text/javascript" defer="defer"></script>
   @livewireStyles
 
       <!-- Google Tag Manager -->
