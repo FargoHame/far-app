@@ -1,0 +1,43 @@
+stages:
+  - deploy_dev
+  - deploy_prod
+
+deploy_dev:
+  stage: deploy_dev
+  before_script:
+    - apt-get update -qq
+    - apt-get install -qq git
+    # Setup SSH deploy keys
+    - 'which ssh-agent || ( apt-get install -qq openssh-client )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  script:
+    - ssh forge@134.209.116.205 "cd /home/forge/app.findarotation.com && git fetch && git reset --hard origin/develop && php artisan down && php artisan migrate --force"
+    - ssh forge@134.209.116.205 "cd /home/forge/app.findarotation.com && php artisan cache:clear && php artisan route:cache && php artisan config:clear && php artisan view:clear && rm -rf bootstrap/cache/*/* && composer install --no-dev && php artisan up"
+  environment:
+    name: develop
+    url: https://devfind.test123.dev/
+  only:
+    - develop
+
+deploy_prod:
+  stage: deploy_prod
+  before_script:
+    - apt-get update -qq
+    - apt-get install -qq git
+    # Setup SSH deploy keys
+    - 'which ssh-agent || ( apt-get install -qq openssh-client )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  script:
+    - ssh forge@147.182.209.8 "cd /home/forge/app.findarotation.com && git fetch && git reset --hard origin/main && php artisan down && php artisan migrate --force"
+    - ssh forge@147.182.209.8 "cd /home/forge/app.findarotation.com && php artisan cache:clear && php artisan route:cache && php artisan config:clear && php artisan view:clear && rm -rf bootstrap/cache/*/* && composer install --no-dev && php artisan up"
+  environment:
+    name: production
+    url: https://app.findarotation.com/
+  only:
+    - main
